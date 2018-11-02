@@ -17,11 +17,16 @@ pass varchar(255) not null
 create table posts (
 id int not null primary key auto_increment,
 msg varchar(255) not null,
-user int not null,
-published datetime not null
+username int not null,
+published DATETIME DEFAULT CURRENT_TIMESTAMP not null
 );
+
+alter table posts add foreign key (username) references signup(uid);
 
 insert into signup(uid,username,email,pass) values 
 (null,'ajeto','blabla@gmail.com','123456');
+
+insert into posts(id,msg,username) values 
+(null,'eee disi',1);
 
 select 'Sve uspjesno odradeno' as poruka;
