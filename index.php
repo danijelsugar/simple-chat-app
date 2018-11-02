@@ -22,6 +22,7 @@
 				</div>
 				<input type="submit" value="Login">
 			</form>
+			<p>Dont have account? Register <a href="signup.php">here</a></p>
 		</div>
 	</div>
 </body>
