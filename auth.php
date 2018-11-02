@@ -17,7 +17,7 @@
 	$user = $query->fetch(PDO::FETCH_OBJ);
 	print_r($user);
 
-	if($user !=null && $user->pass==$_POST["password"]){
+	if($user !=null && $user->pass==password_verify($_POST["password"],$user->pass)){
 		//pusti dalje
 		$user->pass="";
 		$_SESSION["user"]=$user;
