@@ -18,23 +18,7 @@ if(!isset($_SESSION["user"])){
 			<a href="<?php echo $pathAPP ?>logout.php">Logout</a>
 		</div>
 		<div class="chat">
-			<div class="output">
-				<?php 
-
-					$query = $connect->prepare("select a.id, a.msg, b.username, a.published from posts a 
-												inner join signup b 
-												on a.username=b.uid");
-					$query->execute();
-					$result = $query->fetchAll(PDO::FETCH_OBJ);
-					foreach($result as $row):
-				?>
-				<div class="message">
-					<p><?php echo $row->username; ?>:</p>
-					<p><?php echo $row->msg; ?></p>
-					<p><?php echo $row->published; ?></p>
-				</div>
-				<?php endforeach; ?>
-			</div>
+			<div class="output" id="output"></div>
 			<div class="input-area">
 				<form action="#" method="POST">
 					<textarea name="msg" id="msg" cols="30" rows="10"></textarea>
@@ -43,21 +27,88 @@ if(!isset($_SESSION["user"])){
 			</div>
 		</div>
 	</div>
-
+	<script src="<?php echo $pathAPP ?>js/jquery.js"></script>
 	<script>
+
+
 		$(document).ready(function(){
-			var id;
-			$(".send-msg").click(function(){
-			    id=$(this).attr("id").split("_")[1];
+		    var uid;
+		    var msg;
+		    $(".send-msg").click(function(){
+			    uid = $(this).attr("id").split("_")[1];
+			    msg = $("#msg").val();
+			    $("form").trigger("reset");
 			    
 			    $.ajax({
 			        type: "POST",
 			        url: "sendMsg.php",
-			        data: "uid=" + id + "&msg=" + msg,
-			        success: function(data)
+			        data: {id:uid,msg:msg}
+			        
 			    });
+			    return false;
 		    });
+
+		    setInterval(function () {
+		    	$.ajax({
+		        type: "POST",
+		        url: "allPosts.php",
+		        success: function(data){
+
+		        	var posts = JSON.parse(data);
+			           
+		        	var message = "";
+		        	$.each(posts,function(key,value){
+
+		        		message += "<div>";
+		        		message += "<p>" + value.username + ": </p>";
+		        		message += "<p>" + value.msg + "</p>";
+		        		message += "<p>" + value.published + "</p>";
+		        		message += "</div>";
+
+
+		        	});
+
+		        	$("#output").append(message);
+
+		        }
+		        
+		    	});
+		    }, 3000);
+
+			$.ajax({
+		        type: "POST",
+		        url: "allPosts.php",
+		        success: function(data){
+
+		        	var posts = JSON.parse(data);
+			           
+		        	var message = "";
+		        	$.each(posts,function(key,value){
+
+		        		message += "<div>";
+		        		message += "<p>" + value.username + ": </p>";
+		        		message += "<p>" + value.msg + "</p>";
+		        		message += "<p>" + value.published + "</p>";
+		        		message += "</div>";
+
+
+		        	});
+
+		        	$("#output").append(message);
+
+		        }
+		        
+		    });
+
+		});
+
+		window.onload=function () {
+		    var objDiv = document.getElementById("output");
+		    objDiv.scrollTop = objDiv.scrollHeight;
 		}
+
 	</script>
+
+	
 </body>
 </html>
