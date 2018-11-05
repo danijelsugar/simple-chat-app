@@ -70,7 +70,7 @@ body {
     overflow-y: scroll;
     background-color: #fff;
 }
-.message {
+.output div {
     display: flex;
     justify-content: space-between;
 }
