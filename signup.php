@@ -50,6 +50,27 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Chat me</title>
 	<link rel="stylesheet" href="<?php echo $pathAPP; ?>css/style.css">
+	<style>
+		.login-form input {
+			background-color: #414452;
+		    box-sizing: border-box;
+		    color: #fff;
+		    -webkit-box-sizing: border-box;
+		    -moz-box-sizing: border-box;
+		    display: block;
+		    float: none;
+		    font-size: 16px;
+		    border: none;
+		    border-bottom: 1px solid #000;
+		    padding: 6px 10px;
+		    height: 38px;
+		    line-height: 1.3;
+		    width: 200px;
+		}
+		.form-field {
+			border: none;
+		}
+	</style>
 </head>
 <body>
 	<div class="wrapper">
