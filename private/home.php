@@ -21,7 +21,7 @@ if(!isset($_SESSION["user"])){
 			<div class="output" id="output"></div>
 			<div class="input-area">
 				<form action="#" method="POST">
-					<textarea name="msg" id="msg" cols="30" rows="10"></textarea>
+					<input autocomplete="off" type="text" name="msg" id="msg" placeholder="Enter your message">
 					<a href="#" class="send-msg" id="user_<?php echo $_SESSION["user"]->uid; ?>">Send</a>
 				</form>
 			</div>
@@ -48,11 +48,11 @@ if(!isset($_SESSION["user"])){
 			    return false;
 		    });
 
-		    setInterval(function () {
-		    	$.ajax({
-		        type: "POST",
-		        url: "allPosts.php",
-		        success: function(data){
+		   
+	    	$.ajax({
+	        type: "POST",
+	        url: "allPosts.php",
+	        	success: function(data){
 
 		        	var posts = JSON.parse(data);
 			           
@@ -70,42 +70,19 @@ if(!isset($_SESSION["user"])){
 
 		        	$("#output").append(message);
 
-		        }
-		        
-		    	});
-		    }, 3000);
-
-			$.ajax({
-		        type: "POST",
-		        url: "allPosts.php",
-		        success: function(data){
-
-		        	var posts = JSON.parse(data);
-			           
-		        	var message = "";
-		        	$.each(posts,function(key,value){
-
-		        		message += "<div>";
-		        		message += "<p>" + value.username + ": </p>";
-		        		message += "<p>" + value.msg + "</p>";
-		        		message += "<p>" + value.published + "</p>";
-		        		message += "</div>";
-
-
-		        	});
-
-		        	$("#output").append(message);
-
-		        }
+	        	}
 		        
 		    });
 
 		});
 
+		
 		window.onload=function () {
 		    var objDiv = document.getElementById("output");
 		    objDiv.scrollTop = objDiv.scrollHeight;
 		}
+
+
 
 	</script>
 
