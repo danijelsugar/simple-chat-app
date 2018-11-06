@@ -5,6 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Chat me</title>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 	<link rel="stylesheet" href="<?php echo $pathAPP; ?>css/style.css">
 </head>
 <body>
@@ -13,12 +14,10 @@
 			<h2>Login here:</h2>
 			<form action="auth.php" method="POST">
 				<div class="form-field">
-					<label for="username">Username</label>
-					<input type="text" id="username" name="username">
+					<i class="far fa-user fa-2x"></i><input autocomplete="off" type="text" id="username" name="username">
 				</div>
 				<div class="form-field">
-					<label for="password">Password</label>
-					<input type="password" id="password" name="password">
+					<i class="fas fa-lock fa-2x"></i><input type="password" id="password" name="password">
 				</div>
 				<input type="submit" value="Login">
 			</form>
