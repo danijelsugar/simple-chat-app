@@ -8,22 +8,70 @@ if(!isset($_SESSION["user"])){
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 	<link rel="stylesheet" href="<?php echo $pathAPP ?>css/style.css">
+	<style>
+		.form-field {
+			padding: 0;
+			margin: 0px;
+			border: none;
+			display: flex;
+		}
+		.form-field input {
+			flex-basis: 80%;
+			height: 25px;
+			border: none;
+		}
+		.form-field a {
+			flex-basis: 20%;
+			background-color: #fff;
+			color: #336699;
+			text-decoration: none;
+			text-align: center;
+		}
+		.fa-2x {
+		    font-size: 1.5rem;
+		}
+	</style>
 	<title>Document</title>
 </head>
 <body>
 	<div class="home-wrapper">
-		<div class="top-bar">
-			<p><?php echo $_SESSION["user"]->username; ?> - ONLINE</p>
-			<a href="<?php echo $pathAPP ?>logout.php">Logout</a>
-		</div>
-		<div class="chat">
-			<div class="output" id="output"></div>
-			<div class="input-area">
-				<form action="#" method="POST">
-					<input autocomplete="off" type="text" name="msg" id="msg" placeholder="Enter your message">
-					<a href="#" class="send-msg" id="user_<?php echo $_SESSION["user"]->uid; ?>">Send</a>
+		<div class="home-chat">
+			<div class="sidebar">
+				<div class="sidebar-top">
+					<p><?php echo $_SESSION["user"]->username; ?></p>
+					<ul>
+						<?php 
+
+							$query = $connect->prepare("select * from signup");
+							$query->execute();
+							$result = $query->fetchAll(PDO::FETCH_OBJ);
+							foreach($result as $row):
+						?>
+						<li><a href="<?php echo $pathAPP; ?>private/privateChat/privateMsgs.php?user=<?php echo $row->username; ?>"><?php echo $row->username; ?></a></li>
+						<?php endforeach; ?>
+					</ul>
+				</div>
+				<div class="sidebar-bottom">
+					<a href="<?php echo $pathAPP; ?>logout.php"><i class="fas fa-power-off"></i> Logout</a>
+				</div>
+			</div>
+			<div class="chat">
+				<form action="">
+					<div class="search-bar">
+						<input type="search" name="condition" id="condition">
+					</div>
 				</form>
+				<div class="output" id="output"></div>
+				<div class="input-area">
+					<form action="#" method="POST">
+						<div class="form-field">
+							<input autocomplete="off" type="text" name="msg" id="msg" placeholder="Enter your message">
+							<a href="#" class="send-msg" id="user_<?php echo $_SESSION["user"]->uid; ?>"><i class="far fa-share-square fa-2x"></i></a>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -48,39 +96,34 @@ if(!isset($_SESSION["user"])){
 			    return false;
 		    });
 
-		   
-	    	$.ajax({
-	        type: "POST",
-	        url: "allPosts.php",
-	        	success: function(data){
+		   	
+		   	
 
-		        	var posts = JSON.parse(data);
-			           
-		        	var message = "";
-		        	$.each(posts,function(key,value){
+		   		var oldscrollHeight = $("#output")[0].scrollHeight;
 
-		        		message += "<div>";
-		        		message += "<p>" + value.username + ": </p>";
-		        		message += "<p>" + value.msg + "</p>";
-		        		message += "<p>" + value.published + "</p>";
-		        		message += "</div>";
+		    	$.ajax({
+		        type: "POST",
+		        url: "allPosts.php",
+		        	success: function(data){
+		        		console.log(data);
+		        		if(data != $("#output").text()){
+					        $("#output").append(data);
+					    }
 
+			        	var newscrollHeight = $("#output")[0].scrollHeight;
+				            if(newscrollHeight > oldscrollHeight){
+				                $("#output").scrollTop($("#output")[0].scrollHeight);
+				            }
 
-		        	});
-
-		        	$("#output").append(message);
-
-	        	}
-		        
-		    });
+		        	}
+			        
+			    });
+			
 
 		});
 
 		
-		window.onload=function () {
-		    var objDiv = document.getElementById("output");
-		    objDiv.scrollTop = objDiv.scrollHeight;
-		}
+		
 
 
 
