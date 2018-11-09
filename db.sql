@@ -21,12 +21,28 @@ username int not null,
 published DATETIME DEFAULT CURRENT_TIMESTAMP not null
 );
 
+create table privatemsg (
+id int not null primary key auto_increment,
+toid int not null,
+fromid int not null,
+msg varchar(255) not null,
+timesent DATETIME DEFAULT CURRENT_TIMESTAMP not null
+);
+
+
+
 alter table posts add foreign key (username) references signup(uid);
+
+alter table privatemsg add foreign key (toid) references signup(uid);
+alter table privatemsg add foreign key (fromid) references signup(uid);
 
 insert into signup(uid,username,email,pass) values 
 (null,'ajeto','blabla@gmail.com','123456');
 
 insert into posts(id,msg,username) values 
 (null,'eee disi',1);
+
+insert into privatemsg(id,toid,fromid,msg) values 
+(null, 1,2,'disi');
 
 select 'Sve uspjesno odradeno' as poruka;
