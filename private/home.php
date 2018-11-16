@@ -40,18 +40,35 @@ if(!isset($_SESSION["user"])){
 		<div class="home-chat">
 			<div class="sidebar">
 				<div class="sidebar-top">
-					<p><?php echo $_SESSION["user"]->username; ?></p>
-					<ul>
-						<?php 
+					<div class="siderbar-top-user-profile">
+						<ul class="user">
+							<li>
+								<a href="#"><?php echo $_SESSION["user"]->username; ?> <i class="fas fa-sort-down"></i></a>
+								<ul>
+									<li><a href="profile/index.php">Profile</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+					<div class="siderbar-top-users">
+						<ul>
+							<?php 
 
-							$query = $connect->prepare("select * from signup");
-							$query->execute();
-							$result = $query->fetchAll(PDO::FETCH_OBJ);
-							foreach($result as $row):
-						?>
-						<li><a href="<?php echo $pathAPP; ?>private/privateChat/privateMsgs.php?user=<?php echo $row->username; ?>"><?php echo $row->username; ?></a></li>
-						<?php endforeach; ?>
-					</ul>
+								$query = $connect->prepare("select * from signup");
+								$query->execute();
+								$result = $query->fetchAll(PDO::FETCH_OBJ);
+								foreach($result as $row):
+									if($row->username===$_SESSION["user"]->username){
+										continue;
+									}
+							?>
+							<li>
+								<a href="<?php echo $pathAPP; ?>private/privateChat/privateMsgs.php?user=<?php echo $row->username; ?>
+								&uid=<?php echo $row->uid; ?>"><?php echo $row->username; ?></a>
+							</li>
+							<?php endforeach; ?>
+						</ul>
+					</div>
 				</div>
 				<div class="sidebar-bottom">
 					<a href="<?php echo $pathAPP; ?>logout.php"><i class="fas fa-power-off"></i> Logout</a>
@@ -105,7 +122,7 @@ if(!isset($_SESSION["user"])){
 		        type: "POST",
 		        url: "allPosts.php",
 		        	success: function(data){
-		        		console.log(data);
+		        		
 		        		if(data != $("#output").text()){
 					        $("#output").append(data);
 					    }
