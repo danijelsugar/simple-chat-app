@@ -40,18 +40,36 @@ if(!isset($_SESSION["user"])){
 		<div class="home-chat">
 			<div class="sidebar">
 				<div class="sidebar-top">
-					<p><?php echo $_SESSION["user"]->username; ?></p>
-					<ul>
-						<?php 
+					<div class="siderbar-top-user-profile">
+						<ul class="user">
+							<li>
+								<a href="#"><?php echo $_SESSION["user"]->username; ?> <i class="fas fa-sort-down"></i></a>
+								<ul>
+									<li><a href="profile/index.php">Profile</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+					<div class="siderbar-top-users">
+						<ul>
+							<li><a href="<?php echo $pathAPP; ?>private/home.php">Public chat</a></li>
+							<?php 
 
-							$query = $connect->prepare("select * from signup");
-							$query->execute();
-							$result = $query->fetchAll(PDO::FETCH_OBJ);
-							foreach($result as $row):
-						?>
-						<li><a href="#"><?php echo $row->username; ?></a></li>
-						<?php endforeach; ?>
-					</ul>
+								$query = $connect->prepare("select * from signup");
+								$query->execute();
+								$result = $query->fetchAll(PDO::FETCH_OBJ);
+								foreach($result as $row):
+									if($row->username===$_SESSION["user"]->username){
+										continue;
+									}
+							?>
+							<li>
+								<a href="<?php echo $pathAPP; ?>private/privateChat/privateMsgs.php?user=<?php echo $row->username; ?>
+								&uid=<?php echo $row->uid; ?>"><?php echo $row->username; ?></a>
+							</li>
+							<?php endforeach; ?>
+						</ul>
+					</div>
 				</div>
 				<div class="sidebar-bottom">
 					<a href="<?php echo $pathAPP; ?>logout.php"><i class="fas fa-power-off"></i> Logout</a>
@@ -73,19 +91,20 @@ if(!isset($_SESSION["user"])){
 	<script src="<?php echo $pathAPP ?>js/jquery.js"></script>
 	<script>
 
-
+		
 		$(document).ready(function(){
-		    var uid;
-		    var msg;
+			//On click sends msg with ajax
+		    var senderId = <?php echo $_SESSION["user"]->uid; ?>;		//id of user that is sending message
+		    var recipientId = '<?php echo $_GET["uid"] ?>';		//id of user that recives msg
+		    var msg;	//message that is being sent
 		    $(".send-msg").click(function(){
-			    uid = $(this).attr("id").split("_")[1];
 			    msg = $("#msg").val();
 			    $("form").trigger("reset");
 			    
 			    $.ajax({
 			        type: "POST",
 			        url: "sendPrivateMsg.php",
-			        data: {id:uid,msg:msg}
+			        data: {senderId:senderId,recipientId:recipientId,msg:msg}
 			        
 			    });
 			    return false;
@@ -93,38 +112,20 @@ if(!isset($_SESSION["user"])){
 
 		   	
 		   	
-
+		    //Listing all private messages of two users with ajax
 	   		var oldscrollHeight = $("#output")[0].scrollHeight;
 
-	   		var reciver = '<?php echo $_GET["user"] ?>';
-	   		var sender = $(".send-msg").attr("id").split("_")[1];
-	   		console.log(sender);
+	   		var reciver = '<?php echo $_GET["user"] ?>';	//username of recipient
+	   		var sender = $(".send-msg").attr("id").split("_")[1];	//username of sender
 	    	$.ajax({
 	        type: "POST",
 	        url: "allPrivateMsgs.php",
-	        //data: "reciver=" + reciver + "," + "sender=" + sender,
 	        data: {reciver: reciver, sender: sender},
 	        	success: function(data){
 	        		console.log(data);
 	        		if(data != $("#output").text()){
 				        $("#output").append(data);
 				    }
-
-		        	/*var posts = JSON.parse(data);
-			           
-		        	var message = "";
-		        	$.each(posts,function(key,value){
-
-		        		message += "<div>";
-		        		message += "<p>" + value.username + ": </p>";
-		        		message += "<p>" + value.msg + "</p>";
-		        		message += "<p>" + value.published + "</p>";
-		        		message += "</div>";
-
-
-		        	});
-
-		        	$("#output").append(message);*/
 
 		        	var newscrollHeight = $("#output")[0].scrollHeight;
 			            if(newscrollHeight > oldscrollHeight){
@@ -135,7 +136,6 @@ if(!isset($_SESSION["user"])){
 		        
 		    });
 			
-
 		});
 
 		
