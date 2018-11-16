@@ -109,7 +109,7 @@ body {
     background-color: #336699;
     color: #fff;
 }
-.sidebar p {
+.siderbar-top-user-profile ul {
     font-size: 24px;
     line-height: 36px;
     text-align: center;
@@ -117,23 +117,45 @@ body {
     padding: 10px 0;
     margin: 0;
 }
+.siderbar-top-user-profile ul li ul {
+    border: none;
+    position: absolute;
+    left: 0;
+    top: 40px;
+    padding: 15px 73px;
+    background: #00203e;
+    z-index: 999;
+    display: none; 
+}
+.siderbar-top-user-profile ul li:hover ul {
+    display: block;
+}
 .sidebar-top {
     flex: 7;
 }
-.sidebar-top ul{
+.siderbar-top-user-profile ul {
+    text-align: center;
+    padding: 10px 0;
+}
+.siderbar-top-users ul{
     text-align: left;
-    padding-left: 10px 15px;
+    padding: 0;
 }
-.sidebar-top li{
+.siderbar-top-users li, .siderbar-top-user-profile li {
     list-style: none;
+    position: relative;
 }
-.sidebar-top li a {
+.siderbar-top-users li a, .siderbar-top-user-profile li a {
     display: block;
     font-size: 18px;
     line-height: 27px;
     color: #fff;
-    padding: 10px 0;
+    padding: 10px 20px;
     text-decoration: none;
+}
+.siderbar-top-users li a:hover {
+    background-color: #fff;
+    color: #000;
 }
 .sidebar-bottom {
     flex: 1;
