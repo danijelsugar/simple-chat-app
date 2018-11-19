@@ -28,7 +28,16 @@ if(!isset($_SESSION["user"])){
 	<div class="user-profile-wrap">
 		<div class="user-profile">
 			<div class="user-prfile-img">
-				<img src="https://via.placeholder.com/150C/O https://placeholder.com/" alt="">
+				<img src="
+				<?php
+
+				if(file_exists("../../img/uploads/" . $_SESSION["user"]->uid . ".png" )){
+					echo $pathAPP . "img/uploads/" . $_SESSION["user"]->uid . ".png";
+				}else{
+					echo $_SESSION["user"]->image;
+				}
+
+				?>" alt="Profile picture">
 			</div>
 			<div class="user-profile-info">
 				<p>username: <?php echo $_SESSION["user"]->username; ?></p>
