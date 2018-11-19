@@ -31,12 +31,14 @@
 
 
 		if(count($error)===0){
-			$query = $connect->prepare("insert into signup (username,email,pass) values 
-								(:username,:email,:pass)");
+			$query = $connect->prepare("insert into signup (username,email,pass,description,image) values 
+								(:username,:email,:pass,:description,:image)");
 			$query->execute(array(
 				"username"=>$_POST["username"],
 				"email"=>$_POST["email"],
-				"pass"=>password_hash($_POST["password"],PASSWORD_BCRYPT,array("cost"=>12))
+				"pass"=>password_hash($_POST["password"],PASSWORD_BCRYPT,array("cost"=>12)),
+				"description"=>"",
+				"image"=>$pathAPP . "img/nepoznato.png"
 			));
 			header("location: index.php");
 		}

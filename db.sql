@@ -11,7 +11,9 @@ create table signup (
 uid int not null primary key auto_increment,
 username varchar(200) not null,
 email varchar(200) not null,
-pass varchar(255) not null
+pass varchar(255) not null,
+description varchar(255),
+image varchar(255) 
 );
 
 create table posts (
@@ -43,6 +45,6 @@ insert into posts(id,msg,username) values
 (null,'eee disi',1);
 
 insert into privatemsg(id,toid,fromid,msg) values 
-(null, 1,2,'disi');
+(null, 1, 2, 'disi');
 
 select 'Sve uspjesno odradeno' as poruka;
