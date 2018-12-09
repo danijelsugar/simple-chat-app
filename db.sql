@@ -16,6 +16,8 @@ description varchar(255),
 image varchar(255) 
 );
 
+create unique index uq_email on signup(email);
+
 create table posts (
 id int not null primary key auto_increment,
 msg varchar(255) not null,
