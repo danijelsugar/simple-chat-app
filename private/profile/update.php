@@ -1,9 +1,93 @@
 <?php include_once "../../config.php"; 
-if(!isset($_SESSION["user"])){
-	header("location: " . $pathAPP . "logout.php");
-}
+	if(!isset($_SESSION["user"])){
+		header("location: " . $pathAPP . "logout.php");
+	}
 
-	print_r($_POST);
+	if(!isset($_GET["uid"]) && !isset($_POST["uid"])){
+	  	header("location " . $pathAPP . "logout.php");
+	}
+
+	$error = array();
+	if(isset($_POST["Update"])){
+
+		if(trim($_POST["username"])===""){
+		    $error["username"] = "Required entry!";
+		}
+
+		if(strlen($_POST["username"])>50){
+		    $error["username"] = "The username contains too many characters.";
+		}
+
+		$imageError = array();
+
+		if(isset($_FILES["image"])){
+
+			$file = $_FILES["image"];
+
+			$fileName = $file["name"];
+			$fileTmpName = $file["tmp_name"];
+			$fileSize = $file["size"];
+			$fileError = $file["error"];
+			$fileType = $file["type"];
+
+			$fileExt = explode(".", $fileName);
+			$fileActualExt = strtolower(end($fileExt));
+
+			$allowed = array("jpeg","jpg","png");
+
+			if(in_array($fileActualExt, $allowed)){
+				if($fileError === 0){
+					if($fileSize < 1500000){
+						$fileNewName = $_SESSION["user"]->uid . "." . $fileActualExt;
+						$fileDestination ="../../img/uploads/" . $fileNewName;
+						move_uploaded_file($fileTmpName, $fileDestination);
+					}else{
+						$imageError[] = "Size too big";
+					}
+				}else{
+					$imageError[] = "Error";
+				}
+			}else{
+				$imageError[] = "Extension not allowed, please choose a JPEG or PNG file.";
+			}
+		}
+		   
+
+		if(count($error)===0){
+			$query = $connect->prepare("update signup set username=:username, 
+										description=:description, 
+										image=:image 
+										where uid=:uid");
+			$query->bindParam(":uid",$_POST["uid"]);
+			$query->bindParam(":username",$_POST["username"]);
+
+			if($_POST["description"]===""){
+				$query->bindValue(":description",null,PDO::PARAM_STR);
+			}else{
+				$query->bindParam(":description",$_POST["description"]);
+			}
+
+			if($fileSize===0){
+				$query->bindValue(":image", $pathAPP . "img/uploads/" . "nepoznato.png" );
+			}else {
+				$imagePath = $pathAPP . "img/uploads/" . $fileNewName;
+				$query->bindParam(":image", $imagePath);
+			}
+
+			$query->execute();
+			header("location: index.php");
+			
+			
+			
+		}
+
+
+	} else {
+		$query = $connect->prepare("select * from signup where uid=:uid");
+		$query->execute($_GET);
+		$_POST = $query->fetch(PDO::FETCH_ASSOC);
+	}
+	
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -36,20 +120,21 @@ if(!isset($_SESSION["user"])){
 			<form action="<?php echo $_SERVER["PHP_SELF"] ?>" method="POST" enctype="multipart/form-data">
 				<div class="form-field">
 					<label for="username">username</label>
-					<input type="text" name="username">
+					<input type="text" name="username" value="<?php echo $_POST["username"]; ?>">
 				</div>
 				<div class="form-field">
 					<label for="email">email</label>
-					<input type="email" name="email">
+					<input type="email" name="email" value="<?php echo $_POST["email"]; ?>">
 				</div>
 				<div class="form-field">
-					<label for="desc">Description</label>
-					<textarea name="desc" id="desc" cols="30" rows="10"></textarea>
+					<label for="description">Description</label>
+					<textarea name="description" id="description" cols="30" rows="10""><?php echo $_POST["description"]; ?></textarea>
 				</div>
 				<div class="form-field">
 					<label for="image">Profile image</label>
 					<input type="file" name="image">
 				</div>
+				<input type="hidden" name="uid" value="<?php echo $_POST["uid"]; ?>">
 				<input type="submit" name="Update" value="Update">
 			</form>
 		</div>
