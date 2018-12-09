@@ -22,6 +22,27 @@
 				<input type="submit" value="Login">
 			</form>
 			<p>Dont have account? Register <a href="signup.php">here</a></p>
+			<div class="error-msg">
+				<?php 
+
+					if(isset($_GET["msg"])){
+
+						switch($_GET["msg"]){
+							case "1":
+								echo "<p>Username doesn't match our records. Please try again.</p>";
+								break;
+							case "2":
+								echo "<p>Please enter a username.</p>";
+								break;
+							default:
+								echo "";
+								break;
+						}
+
+					}
+
+				?>
+			</div>
 		</div>
 	</div>
 </body>
