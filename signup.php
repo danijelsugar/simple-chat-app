@@ -2,22 +2,26 @@
 
 	$error = array();
 
+	$mySqlUniqueIndexCheck = 1062;
+
+	//check user inputs
+	
 	if(isset($_POST["register"])){
 
 		if(trim($_POST["username"])===""){
-		    $error["username"] = "Enter your username";
+		    $error["username"] = "Username is required.";
 		}
 
 		if(strlen($_POST["username"])>50){
-		    $error["username"] = "Naziv može maksimalno imati 50 znakova.";
+		    $error["username"] = "The username contains too many characters.";
 		}
 
 		if(trim($_POST["email"])===""){
-		    $error["email"] = "Enter your email";
+		    $error["email"] = "Email is required";
 		}
 
 		if(trim($_POST["password"])===""){
-		    $error["password"] = "Enter your password";
+		    $error["password"] = "Password is required";
 		}
 
 		if(trim($_POST["cpassword"])===""){
@@ -31,6 +35,8 @@
 
 
 		if(count($error)===0){
+
+			try {
 			$query = $connect->prepare("insert into signup (username,email,pass,description,image) values 
 								(:username,:email,:pass,:description,:image)");
 			$query->execute(array(
@@ -41,9 +47,15 @@
 				"image"=>$pathAPP . "img/nepoznato.png"
 			));
 			header("location: index.php");
+			}
+			catch (PDOException $e) {
+			    if ($e->errorInfo[1] == 1062) {
+			        $error["email"] = "Email already in use.";
+			    }
+			}
+			
 		}
 	}
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
