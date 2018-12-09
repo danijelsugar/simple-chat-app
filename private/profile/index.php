@@ -17,7 +17,7 @@ if(!isset($_SESSION["user"])){
 		<div id="dl-menu" class="dl-menuwrapper">
 			<button class="dl-trigger">Open Menu</button>
 			<ul class="dl-menu">
-				<li><a href="update.php">Profile settings</a></li>
+				<li><a href="update.php?uid=<?php echo $_SESSION["user"]->uid; ?>">Profile settings</a></li>
 				<li><a href="<?php echo $pathAPP ?>private/home.php">Back to chat</a></li>
 				<li><a href="delete.php?uid=<?php echo $_SESSION["user"]->uid; ?>">Delete account</a></li>
 			</ul>
@@ -30,11 +30,11 @@ if(!isset($_SESSION["user"])){
 			<div class="user-prfile-img">
 				<img src="
 				<?php
-
-				if(file_exists("../../img/uploads/" . $_SESSION["user"]->uid . ".png" )){
-					echo $pathAPP . "img/uploads/" . $_SESSION["user"]->uid . ".png";
-				}else{
+				
+				if(file_exists("../../img/uploads/" . $_SESSION["user"]->uid . ".jpg" )){
 					echo $_SESSION["user"]->image;
+				}else{
+					echo $pathAPP . "img/nepoznato.png";
 				}
 
 				?>" alt="Profile picture">
@@ -42,7 +42,7 @@ if(!isset($_SESSION["user"])){
 			<div class="user-profile-info">
 				<p>username: <?php echo $_SESSION["user"]->username; ?></p>
 				<p>email: <?php echo $_SESSION["user"]->email; ?></p>
-				<p>description: </p>
+				<p>description: <?php echo $_SESSION["user"]->description; ?> </p>
 			</div>
 			
 		</div>
