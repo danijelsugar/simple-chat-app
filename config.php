@@ -2,10 +2,13 @@
 
 	session_start();
 
+	// database connection
+	
 	switch($_SERVER["HTTP_HOST"]){
 	    case "localhost":
 		    $pathAPP="/chat_app/";
 		    $connect = new PDO("mysql:host=localhost;dbname=chatapp","edunova","edunova");
+		    $connect->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 	    break;
 	    case "dsugar.byethost16.com":
 		    $pathAPP="/Site/";
