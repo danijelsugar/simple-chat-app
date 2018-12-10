@@ -15,7 +15,6 @@
 	$query->execute(array("username"=>$_POST["username"]));
 
 	$user = $query->fetch(PDO::FETCH_OBJ);
-	print_r($user);
 
 	if($user !=null && $user->pass==password_verify($_POST["password"],$user->pass)){
 		//pusti dalje

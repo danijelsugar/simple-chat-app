@@ -12,4 +12,3 @@
 		"msg"=>$msg,
 		"username"=>$_POST["id"]
 	));
-

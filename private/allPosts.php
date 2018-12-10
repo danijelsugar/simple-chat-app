@@ -8,9 +8,5 @@
 								order by a.published");
 	$query->execute();
 	$result = $query->fetchAll(PDO::FETCH_OBJ);
-	foreach($result as $row){
-		echo "<div>";
-		echo "<p class='username'>" . $row->username . "</p>" . "<p class='msg'>" . $row->msg . "</p>" . "<p class='published'>" . $row->published . "</p>";
-		echo "</div>";
-	}
-	//echo json_encode($result);
+	echo json_encode($result);
+

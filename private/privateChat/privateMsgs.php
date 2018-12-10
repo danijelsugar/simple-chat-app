@@ -45,7 +45,7 @@ if(!isset($_SESSION["user"])){
 							<li>
 								<a href="#"><?php echo $_SESSION["user"]->username; ?> <i class="fas fa-sort-down"></i></a>
 								<ul>
-									<li><a href="profile/index.php">Profile</a></li>
+									<li><a href="<?php echo $pathAPP; ?>private/profile/index.php">Profile</a></li>
 								</ul>
 							</li>
 						</ul>
@@ -54,6 +54,8 @@ if(!isset($_SESSION["user"])){
 						<ul>
 							<li><a href="<?php echo $pathAPP; ?>private/home.php">Public chat</a></li>
 							<?php 
+
+								
 
 								$query = $connect->prepare("select * from signup");
 								$query->execute();
@@ -122,10 +124,21 @@ if(!isset($_SESSION["user"])){
 	        url: "allPrivateMsgs.php",
 	        data: {reciver: reciver, sender: sender},
 	        	success: function(data){
-	        		console.log(data);
-	        		if(data != $("#output").text()){
-				        $("#output").append(data);
-				    }
+	        		var jsonData = JSON.parse(data);
+ 		        	var jsonLength = jsonData.length;
+			           
+		        	var message = "";
+		        	for ( var i = 0; i < jsonLength; i++ ){
+	        			var result = jsonData[i];
+ 		        		message += "<div>";
+		        		message += "<p class='username'>" + result.sender + ": </p>";
+		        		message += "<p class='msg'>" + result.msg + "</p>";
+		        		message += "<p class='published'>" + result.timesent + "</p>";
+		        		message += "</div>";
+	 		        	
+		        	}
+		        	
+ 		        	$("#output").append(message);
 
 		        	var newscrollHeight = $("#output")[0].scrollHeight;
 			            if(newscrollHeight > oldscrollHeight){

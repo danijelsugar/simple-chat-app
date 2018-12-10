@@ -53,6 +53,7 @@ if(!isset($_SESSION["user"])){
 					<div class="siderbar-top-users">
 						<ul>
 							<?php 
+								// Lists all registered users 
 
 								$query = $connect->prepare("select * from signup");
 								$query->execute();
@@ -99,6 +100,7 @@ if(!isset($_SESSION["user"])){
 		$(document).ready(function(){
 		    var uid;
 		    var msg;
+		    //send msg with ajax
 		    $(".send-msg").click(function(){
 			    uid = $(this).attr("id").split("_")[1];
 			    msg = $("#msg").val();
@@ -107,8 +109,10 @@ if(!isset($_SESSION["user"])){
 			    $.ajax({
 			        type: "POST",
 			        url: "sendMsg.php",
-			        data: {id:uid,msg:msg}
-			        
+			        data: {id:uid,msg:msg},
+			        	success: function(response){
+			        		var lastID = response;
+			        	}
 			    });
 			    return false;
 		    });
@@ -117,27 +121,41 @@ if(!isset($_SESSION["user"])){
 		   	
 
 		   		var oldscrollHeight = $("#output")[0].scrollHeight;
-
-		    	$.ajax({
+		   		//retrives all messages with ajax
+		   		$.ajax({
 		        type: "POST",
 		        url: "allPosts.php",
 		        	success: function(data){
-		        		
-		        		if(data != $("#output").text()){
-					        $("#output").append(data);
-					    }
+	 		        	var jsonData = JSON.parse(data);
+	 		        	var jsonLength = jsonData.length;
+				           
+			        	var message = "";
+			        	for ( var i = 0; i < jsonLength; i++ ){
+			        			var result = jsonData[i];
+		 		        		message += "<div>";
+				        		message += "<p class='username'>" + result.username + ": </p>";
+				        		message += "<p class='msg'>" + result.msg + "</p>";
+				        		message += "<p class='published'>" + result.published + "</p>";
+				        		message += "</div>";
+		 		        	
+			        	}
+			        	
+	 		        	$("#output").append(message);
 
-			        	var newscrollHeight = $("#output")[0].scrollHeight;
-				            if(newscrollHeight > oldscrollHeight){
-				                $("#output").scrollTop($("#output")[0].scrollHeight);
-				            }
-
-		        	}
+	 		        	var newscrollHeight = $("#output")[0].scrollHeight;
+			            if(newscrollHeight > oldscrollHeight){
+			                $("#output").scrollTop($("#output")[0].scrollHeight);
+			            }
+	 		        }
 			        
 			    });
+		   		
+		    	
 			
 
 		});
+
+
 
 		
 		
